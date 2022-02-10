@@ -18,12 +18,17 @@ stages:
   - job: 'Build'
     displayName: 'Build job'
     pool:
-      name: Test
+      name: agentpool123
     
     variables:
       dotnetSdkVersion: '5.x'
 
     steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x' 
+        force32bit: false # Optional
+        checkLatest: false # Optional
     - task: Npm@1
       displayName: 'Restore Angular Dependencies'
       inputs:
@@ -45,6 +50,14 @@ stages:
     #     workingDir: 'ClientApp'
     #     verbose: false
     #     customCommand: 'run test'
+
+
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk'
+      inputs:
+        packageType: sdk
+        version: 5.1.x
+        installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: DotNetCoreCLI@2
       displayName: 'Restore project dependencies'
